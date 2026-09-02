@@ -24,13 +24,45 @@ button.active{background:var(--accent);color:#fff}
 .status.ok{background:#e5f5e7;color:#246a38}.status.bad{background:#f8e7e2;color:#8a3a28}
 .canvasbox{width:100%;aspect-ratio:16/10;position:relative;background:#fff;border:2px solid #bbb4a6;border-radius:14px;overflow:hidden;touch-action:none}
 canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
-.compassBar{display:none;margin:8px 0 10px;padding:10px;border-radius:12px;background:#eef4f1;border:1px solid #d3e2dc}
+
+/* 상단 도구를 아이콘형으로 compact하게 */
+.controlsHead{display:flex;flex-direction:column;align-items:stretch;gap:6px;padding-bottom:2px}
+.controlsHead::-webkit-scrollbar{height:6px}
+.controlsHead::-webkit-scrollbar-thumb{background:#d0c8ba;border-radius:999px}
+.controlsBlock{display:flex;flex-direction:column;gap:6px;flex:1 1 auto;min-width:0}
+.tools.iconbar{display:flex;gap:5px;flex-wrap:nowrap;align-items:center;overflow-x:auto;padding-bottom:2px}
+.tools.iconbar::-webkit-scrollbar{height:6px}
+.tools.iconbar::-webkit-scrollbar-thumb{background:#d0c8ba;border-radius:999px}
+.toolIconBtn{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:5px 4px;min-height:46px;min-width:54px;border-radius:12px;flex:0 0 auto}
+.toolIconBtn .toolIcon{font-size:18px;line-height:1;margin-bottom:2px}
+.toolIconBtn .toolLabel{font-size:10px;font-weight:800;line-height:1.05}
+.controlsSub{font-size:12px;font-weight:800;color:#555;min-width:30px;padding-top:0}
+.mission{font-size:14px;font-weight:800;white-space:nowrap;padding-right:0}
+.colorRow{display:none}
+.tools.palette{display:flex;gap:5px;flex-wrap:nowrap;align-items:center;margin-left:2px}
+.colorBtn{width:28px;height:28px;padding:0;border-radius:999px;border:2px solid rgba(0,0,0,.08);font-size:0;min-width:28px;flex:0 0 auto}
+.colorBtn.active{outline:2px solid #222;outline-offset:1px}
+.colorBtn::after{content:''}
+.compactDivider{width:1px;height:28px;background:#d9d2c6;margin:0 2px;flex:0 0 auto}
+
+.compassBar{display:none;margin:6px 0 8px;padding:8px 10px;border-radius:12px;background:#eef4f1;border:1px solid #d3e2dc}
 .compassBar.show{display:block}
-.compassTitle{font-weight:800;margin-bottom:7px}
+.compassTitle{font-weight:800;margin-bottom:6px;font-size:13px}
+.compassModes{gap:6px}
+.compassModes button{padding:6px 8px;font-size:12px}
 .hint{margin-top:10px;padding:12px;background:#f7f1df;border-left:5px solid #d6ad49;border-radius:10px;line-height:1.6}
-.small{font-size:13px;color:#666;margin-top:8px;line-height:1.5}
+.small{font-size:11px;color:#666;margin-top:6px;line-height:1.4}
 .badge{display:inline-block;border-radius:999px;padding:2px 7px;background:#e8eee9;color:#355f55;font-weight:700}
-@media(max-width:640px){.canvasbox{aspect-ratio:4/5}.mission{font-size:16px}button{font-size:14px;padding:10px 12px}}
+
+@media(max-width:640px){
+  .canvasbox{aspect-ratio:4/5}
+  button{font-size:13px;padding:9px 11px}
+  .mission{font-size:13px}
+  .toolIconBtn{min-width:50px;min-height:44px;padding:4px 3px}
+  .toolIconBtn .toolIcon{font-size:17px}
+  .toolIconBtn .toolLabel{font-size:9px}
+  .colorBtn{width:26px;height:26px;min-width:26px}
+}
 
 .shareTop{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto}
 .shareBtn{background:#315f95;color:#fff}
@@ -74,42 +106,41 @@ canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
   </div>
 
   <div class="panel">
-    <div class="row">
-      <div class="mission" id="mission"></div>
-      <div class="tools">
-        <button id="lineBtn" class="active">자(직선)</button>
-        <button id="rayBtn">반직선</button>
-        <button id="segmentBtn">선분</button>
-        <button id="compassBtn">컴퍼스</button>
-        <button id="pointBtn">점</button>
-        <button id="intersectionBtn">교점</button>
+    <div class="controlsHead">
+      <div class="controlsBlock">
+        <div class="mission" id="mission"></div>
+        <div class="tools iconbar" id="colorTools">
+          <button id="lineBtn" class="toolIconBtn active" title="직선"><span class="toolIcon">📏</span><span class="toolLabel">직선</span></button>
+          <button id="rayBtn" class="toolIconBtn" title="반직선"><span class="toolIcon">↗️</span><span class="toolLabel">반직선</span></button>
+          <button id="segmentBtn" class="toolIconBtn" title="선분"><span class="toolIcon">／</span><span class="toolLabel">선분</span></button>
+          <button id="compassBtn" class="toolIconBtn" title="컴퍼스"><span class="toolIcon">🧭</span><span class="toolLabel">컴퍼스</span></button>
+          <button id="pointBtn" class="toolIconBtn" title="점"><span class="toolIcon">●</span><span class="toolLabel">점</span></button>
+          <button id="intersectionBtn" class="toolIconBtn" title="교점"><span class="toolIcon">✚</span><span class="toolLabel">교점</span></button>
+          <span class="compactDivider"></span>
+          <button class="colorBtn active" data-color="#1565c0" aria-label="파랑" title="파랑" style="background:#1565c0"></button>
+          <button class="colorBtn" data-color="#d34e32" aria-label="빨강" title="빨강" style="background:#d34e32"></button>
+          <button class="colorBtn" data-color="#2e7d32" aria-label="초록" title="초록" style="background:#2e7d32"></button>
+          <button class="colorBtn" data-color="#111111" aria-label="검정" title="검정" style="background:#111"></button>
+          <button class="colorBtn" data-color="#8e44ad" aria-label="보라" title="보라" style="background:#8e44ad"></button>
+        </div>
       </div>
     </div>
 
     <div id="compassBar" class="compassBar">
       <div class="compassTitle">컴퍼스 조작</div>
       <div class="compassModes">
-        <button id="cmMove" class="active">① 이동</button>
-        <button id="cmOpen">② 간격 조절</button>
-        <button id="cmArc">③ 호 그리기</button>
+        <button id="cmMove" class="active">이동</button>
+        <button id="cmOpen">간격</button>
+        <button id="cmArc">호</button>
       </div>
       <div class="small">
-        <span class="badge">이동</span> 바늘점 또는 몸통을 끌어 컴퍼스 전체를 옮깁니다. 바늘점이 기존 점 가까이에 오면 자동으로 정확히 붙습니다.
-        &nbsp; <span class="badge">간격 조절</span> 연필점을 끌어 반지름을 맞춥니다. 연필점도 기존 점 가까이에 오면 자동으로 정확히 붙습니다.
-        &nbsp; <span class="badge">호 그리기</span> 연필점을 누른 채 돌리면 움직인 만큼만 호가 그려집니다.
+        <span class="badge">이동</span> 위치 변경 &nbsp;
+        <span class="badge">간격</span> 반지름 조절 &nbsp;
+        <span class="badge">호</span> 필요한 만큼만 그리기
       </div>
     </div>
 
-    <div class="row" style="margin-top:0">
-      <div style="font-weight:800">색상</div>
-      <div class="tools" id="colorTools">
-        <button class="colorBtn active" data-color="#1565c0" style="background:#1565c0;color:white">파랑</button>
-        <button class="colorBtn" data-color="#d34e32" style="background:#d34e32;color:white">빨강</button>
-        <button class="colorBtn" data-color="#2e7d32" style="background:#2e7d32;color:white">초록</button>
-        <button class="colorBtn" data-color="#111111" style="background:#111;color:white">검정</button>
-        <button class="colorBtn" data-color="#8e44ad" style="background:#8e44ad;color:white">보라</button>
-      </div>
-    </div>
+
 
     <div id="status" class="status">도구를 선택하고 작도해 보세요.</div>
 
