@@ -103,6 +103,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
     <button id="t2">교과서 1</button>
     <button id="t3">교과서 3</button>
     <button id="t4">교과서 4</button>
+    <button id="t5">번외. 수직이등분선</button>
   </div>
 
   <div class="panel">
@@ -201,7 +202,9 @@ const L=[
   h:['① O를 중심으로 두 변을 가로지르는 호를 그으세요.','② 그 간격을 유지하고 컴퍼스를 P로 옮겨 같은 호를 그으세요.','③ 원래 호의 두 교점 사이 거리를 옮겨 새 호 위에 표시한 뒤 P와 연결하세요.']},
  {m:'', h:['수직선 위의 눈금과 위치를 이용해 직접 표시해 보세요.']},
  {m:'', h:['왼쪽의 두 각을 이용해 오른쪽 빈 공간에 직접 작도해 보세요.']},
- {m:'', h:['오각형의 각을 컴퍼스로 비교해 보세요.']}
+ {m:'', h:['오각형의 각을 컴퍼스로 비교해 보세요.']},
+ {m:'번외: 주어진 선분 AB의 수직이등분선을 작도하세요.',
+  h:['① 컴퍼스를 AB의 절반보다 크게 벌리세요.','② A와 B를 각각 중심으로 같은 반지름의 호를 그으세요.','③ 두 호의 교점 두 개를 자로 연결하면 수직이등분선입니다.']}
 ];
 
 function pt(x,y){return{x,y}}
@@ -246,6 +249,12 @@ function base(){
      C:pt(x+dw*(76/235),  y+dh*(132/195)),
      D:pt(x+dw*(149/235), y+dh*(132/195)),
      E:pt(x+dw*(189/235), y+dh*(77/195))
+   };
+ }
+ if(lesson===5){
+   return{
+     A:pt(W*.30,H*.55),
+     B:pt(W*.70,H*.55)
    };
  }
  return{};
@@ -312,6 +321,9 @@ function baseLineActions(){
   if(lesson===4){
     // 4번은 교과서 그림만 그대로 표시
     return [];
+  }
+  if(lesson===5){
+    return [{t:'s',a:g.A,b:g.B,baseKey:'PERP_AB'}];
   }
   return [];
 }
@@ -607,6 +619,11 @@ function draw(){
      ctx.drawImage(textbook4Img,x,y,dw,dh);
    }
  }
+ if(lesson===5){
+   seg(g.A,g.B,'#222',3);
+   dot(g.A,'A');
+   dot(g.B,'B');
+ }
 
 
  // 교점 도구에서 선택한 '주어진 선'도 주황색으로 강조
@@ -677,7 +694,7 @@ function setStatus(s,k=''){statusEl.className='status'+(k?' '+k:'');statusEl.tex
 
 function setLesson(n){
  lesson=n;actions=[];pending=null;hintStep=0;hintEl.hidden=true;snapTarget=null;intersectionSelections=[];viewScale=1;viewX=0;viewY=0;if(typeof zoomResetBtn!=='undefined')zoomResetBtn.textContent='100%';
- mission.textContent=L[n].m;[t0,t1,t2,t3,t4].forEach((b,i)=>b.classList.toggle('active',i===n));
+ mission.textContent=L[n].m;[t0,t1,t2,t3,t4,t5].forEach((b,i)=>b.classList.toggle('active',i===n));
  compass.visible=false;drag=null;setStatus('도구를 선택하고 작도해 보세요.');draw()
 }
 
@@ -918,6 +935,18 @@ function check(){
      }
    }
    setStatus(ok?'정답에 가까운 각이 만들어졌습니다!':'호의 교점 사이 거리를 옮겨 새 각의 방향을 잡아 보세요.',ok?'ok':'bad')
+ }else if(lesson===5){
+   const mid=pt((g.A.x+g.B.x)/2,(g.A.y+g.B.y)/2);
+   let ok=false;
+   for(const l of actions.filter(x=>x.t==='l'||x.t==='r'||x.t==='s')){
+     if(lineDist(mid,l.a,l.b)<18){
+       const dx=l.b.x-l.a.x,dy=l.b.y-l.a.y;
+       const abx=g.B.x-g.A.x,aby=g.B.y-g.A.y;
+       const c=Math.abs((dx*abx+dy*aby)/(Math.hypot(dx,dy)*Math.hypot(abx,aby)));
+       if(c<.12) ok=true;
+     }
+   }
+   setStatus(ok?'정답입니다! 선분 AB의 수직이등분선입니다.':'A와 B를 중심으로 같은 반지름의 호를 그어 교점을 만든 뒤 연결해 보세요.',ok?'ok':'bad');
  }else{
    setStatus('이 탭은 교과서 그림을 보고 직접 작도하는 자유 연습용입니다.','ok');
  }
@@ -942,7 +971,7 @@ zoomResetBtn.onclick=()=>{
   viewScale=1;viewX=0;viewY=0;zoomResetBtn.textContent='100%';draw();
 };
 
-t0.onclick=()=>setLesson(0);t1.onclick=()=>setLesson(1);t2.onclick=()=>setLesson(2);t3.onclick=()=>setLesson(3);t4.onclick=()=>setLesson(4);
+t0.onclick=()=>setLesson(0);t1.onclick=()=>setLesson(1);t2.onclick=()=>setLesson(2);t3.onclick=()=>setLesson(3);t4.onclick=()=>setLesson(4);t5.onclick=()=>setLesson(5);
 lineBtn.onclick=()=>setTool('line');
 rayBtn.onclick=()=>setTool('ray');
 segmentBtn.onclick=()=>setTool('segment');
