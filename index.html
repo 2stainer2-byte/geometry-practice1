@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>기본도형 작도 연습 v2</title>
 <style>
 :root{
@@ -11,48 +11,80 @@
 }
 *{box-sizing:border-box}
 body{margin:0;font-family:system-ui,-apple-system,"Noto Sans KR","Malgun Gothic",sans-serif;background:var(--bg);color:var(--ink)}
-header{padding:14px 16px;border-bottom:1px solid #ddd8cc;background:rgba(246,244,234,.97);position:sticky;top:0;z-index:3}
-h1{margin:0;font-size:clamp(22px,3vw,34px)} .sub{font-size:14px;color:#666;margin-top:4px}
-.wrap{max-width:1100px;margin:auto;padding:16px}
+header{padding:8px 12px;border-bottom:1px solid #ddd8cc;background:rgba(246,244,234,.97);position:sticky;top:0;z-index:3}
+h1{margin:0;font-size:clamp(18px,2.4vw,28px)} .sub{font-size:12px;color:#666;margin-top:2px;line-height:1.35}
+.wrap{max-width:1460px;margin:auto;padding:8px 12px}
 .tabs,.tools,.bottom,.compassModes{display:flex;gap:8px;flex-wrap:wrap}
+.tabs{flex-wrap:nowrap;overflow-x:auto;gap:5px;padding-bottom:2px}
+.tabs::-webkit-scrollbar,.bottom::-webkit-scrollbar{height:6px}
+.tabs::-webkit-scrollbar-thumb,.bottom::-webkit-scrollbar-thumb{background:#d0c8ba;border-radius:999px}
+.tabs button{white-space:nowrap;padding:7px 10px;font-size:13px;border-radius:10px}
+.bottom{flex-wrap:nowrap;overflow-x:auto;gap:5px;padding-top:2px}
+.bottom button{white-space:nowrap;padding:7px 10px;font-size:13px;border-radius:10px}
 button{border:0;border-radius:12px;padding:11px 14px;font-size:15px;font-weight:750;background:#ece8df;color:#222;cursor:pointer;touch-action:manipulation}
 button.active{background:var(--accent);color:#fff}
-.panel{background:var(--card);border:1px solid #ddd6ca;border-radius:18px;padding:14px}
+.panel{background:var(--card);border:1px solid #ddd6ca;border-radius:16px;padding:10px}
 .row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:8px 0}
 .mission{font-size:18px;font-weight:800}
-.status{padding:10px 12px;background:#f0eee8;border-radius:10px;margin-bottom:10px;min-height:42px}
+.status{padding:7px 9px;background:#f0eee8;border-radius:10px;margin-bottom:8px;min-height:34px;font-size:14px}
 .status.ok{background:#e5f5e7;color:#246a38}.status.bad{background:#f8e7e2;color:#8a3a28}
-.canvasbox{width:100%;aspect-ratio:16/10;position:relative;background:#fff;border:2px solid #bbb4a6;border-radius:14px;overflow:hidden;touch-action:none}
+.canvasbox{width:100%;aspect-ratio:16/9;position:relative;background:#fff;border:2px solid #bbb4a6;border-radius:14px;overflow:hidden;touch-action:none;max-height:54vh}
 canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
 
 /* 상단 도구를 아이콘형으로 compact하게 */
-.controlsHead{display:flex;flex-direction:column;align-items:stretch;gap:6px;padding-bottom:2px}
+.controlsHead{display:flex;flex-direction:column;align-items:stretch;gap:4px;padding-bottom:1px}
 .controlsHead::-webkit-scrollbar{height:6px}
 .controlsHead::-webkit-scrollbar-thumb{background:#d0c8ba;border-radius:999px}
-.controlsBlock{display:flex;flex-direction:column;gap:6px;flex:1 1 auto;min-width:0}
-.tools.iconbar{display:flex;gap:5px;flex-wrap:nowrap;align-items:center;overflow-x:auto;padding-bottom:2px}
+.controlsBlock{display:flex;flex-direction:column;gap:4px;flex:1 1 auto;min-width:0}
+.tools.iconbar{display:flex;gap:4px;flex-wrap:nowrap;align-items:center;overflow-x:auto;padding-bottom:1px}
 .tools.iconbar::-webkit-scrollbar{height:6px}
 .tools.iconbar::-webkit-scrollbar-thumb{background:#d0c8ba;border-radius:999px}
-.toolIconBtn{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:5px 4px;min-height:46px;min-width:54px;border-radius:12px;flex:0 0 auto}
-.toolIconBtn .toolIcon{font-size:18px;line-height:1;margin-bottom:2px}
-.toolIconBtn .toolLabel{font-size:10px;font-weight:800;line-height:1.05}
+.toolIconBtn{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4px 3px;min-height:40px;min-width:48px;border-radius:11px;flex:0 0 auto}
+.toolIconBtn .toolIcon{font-size:16px;line-height:1;margin-bottom:1px}
+.toolIconBtn .toolLabel{font-size:9px;font-weight:800;line-height:1.05}
 .controlsSub{font-size:12px;font-weight:800;color:#555;min-width:30px;padding-top:0}
-.mission{font-size:14px;font-weight:800;white-space:nowrap;padding-right:0}
+.mission{font-size:13px;font-weight:800;white-space:nowrap;padding-right:0;overflow-x:auto}
 .colorRow{display:none}
 .tools.palette{display:flex;gap:5px;flex-wrap:nowrap;align-items:center;margin-left:2px}
-.colorBtn{width:28px;height:28px;padding:0;border-radius:999px;border:2px solid rgba(0,0,0,.08);font-size:0;min-width:28px;flex:0 0 auto}
+.colorBtn{width:24px;height:24px;padding:0;border-radius:999px;border:2px solid rgba(0,0,0,.08);font-size:0;min-width:24px;flex:0 0 auto}
 .colorBtn.active{outline:2px solid #222;outline-offset:1px}
 .colorBtn::after{content:''}
-.compactDivider{width:1px;height:28px;background:#d9d2c6;margin:0 2px;flex:0 0 auto}
+.compactDivider{width:1px;height:24px;background:#d9d2c6;margin:0 1px;flex:0 0 auto}
 
-.compassBar{display:none;margin:6px 0 8px;padding:8px 10px;border-radius:12px;background:#eef4f1;border:1px solid #d3e2dc}
+.compassBar{display:none;margin:4px 0 6px;padding:6px 8px;border-radius:12px;background:#eef4f1;border:1px solid #d3e2dc}
 .compassBar.show{display:block}
-.compassTitle{font-weight:800;margin-bottom:6px;font-size:13px}
-.compassModes{gap:6px}
-.compassModes button{padding:6px 8px;font-size:12px}
-.hint{margin-top:10px;padding:12px;background:#f7f1df;border-left:5px solid #d6ad49;border-radius:10px;line-height:1.6}
-.small{font-size:11px;color:#666;margin-top:6px;line-height:1.4}
+.compassTitle{font-weight:800;margin-bottom:4px;font-size:12px}
+.compassModes{gap:4px}
+.compassModes button{padding:5px 7px;font-size:11px}
+.hint{margin-top:6px;padding:8px 10px;background:#f7f1df;border-left:5px solid #d6ad49;border-radius:10px;line-height:1.45;font-size:13px}
+.small{font-size:10px;color:#666;margin-top:4px;line-height:1.35}
 .badge{display:inline-block;border-radius:999px;padding:2px 7px;background:#e8eee9;color:#355f55;font-weight:700}
+
+/* Galaxy Tab S7+ 같은 16:10 태블릿 수업용 압축 최적화 */
+@media (min-width: 900px){
+  header{padding:8px 12px}
+  h1{font-size:24px}
+  .sub{font-size:12px}
+  .wrap{max-width:1460px;padding:8px 12px}
+  .panel{padding:10px}
+  .tabs{gap:4px}
+  .tabs button{padding:7px 10px;font-size:13px;border-radius:10px}
+  .status{padding:7px 9px;min-height:34px;font-size:14px}
+  .controlsHead{gap:4px}
+  .mission{font-size:13px}
+  .tools.iconbar{gap:4px}
+  .toolIconBtn{min-width:48px;min-height:40px;padding:4px 3px}
+  .toolIconBtn .toolIcon{font-size:16px}
+  .toolIconBtn .toolLabel{font-size:9px}
+  .colorBtn{width:24px;height:24px;min-width:24px}
+  .compassBar{margin:4px 0 6px;padding:6px 8px}
+  .compassModes button{padding:5px 7px;font-size:11px}
+  .canvasbox{aspect-ratio:16/9;max-height:52vh}
+  .hint{margin-top:6px;padding:8px 10px;font-size:13px}
+  .small{font-size:10px}
+  .bottom{gap:4px}
+  .bottom button{padding:7px 10px;font-size:13px}
+}
 
 @media(max-width:640px){
   .canvasbox{aspect-ratio:4/5}
@@ -64,9 +96,9 @@ canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
   .colorBtn{width:26px;height:26px;min-width:26px}
 }
 
-.shareTop{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto}
-.shareBtn{background:#315f95;color:#fff}
-.fullBtn{background:#4a4a4a;color:#fff}
+.shareTop{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
+.shareBtn{background:#315f95;color:#fff;padding:8px 10px;font-size:13px}
+.fullBtn{background:#4a4a4a;color:#fff;padding:8px 10px;font-size:13px}
 .modalOverlay{position:fixed;inset:0;background:rgba(0,0,0,.48);z-index:50;display:none;align-items:center;justify-content:center;padding:16px}
 .modalOverlay.show{display:flex}
 .shareModal{width:min(520px,100%);background:#fff;border-radius:18px;padding:18px;box-shadow:0 18px 60px rgba(0,0,0,.25)}
